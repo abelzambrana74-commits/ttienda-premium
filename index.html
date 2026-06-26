@@ -3,55 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bodega Premium - Vinos & Bodegas</title>
+    <title>Bodega Premium - Catálogo Online</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #1A1A1A; color: white; font-family: 'Times New Roman', serif; }
         .gold-text { color: #D4AF37; }
         .navbar { background-color: #000; border-bottom: 1px solid #D4AF37; }
-        .card-product { background: #000; border: 1px solid #333; transition: 0.3s; }
-        .card-product:hover { border-color: #D4AF37; }
-        .btn-gold { background-color: #D4AF37; color: black; font-weight: bold; }
+        .card-product { background: #000; border: 1px solid #333; transition: 0.3s; height: 100%; }
+        .card-product:hover { border-color: #D4AF37; transform: translateY(-5px); }
+        .btn-gold { background-color: #D4AF37; color: black; font-weight: bold; border: none; }
         .btn-gold:hover { background-color: #b8962d; color: black; }
-        .cart-panel { background: #000; border-left: 1px solid #D4AF37; padding: 20px; height: 100vh; position: sticky; top: 0; }
+        .cart-panel { background: #000; border-left: 1px solid #D4AF37; padding: 20px; min-height: 100vh; }
+        .product-img { height: 180px; object-fit: contain; padding: 10px; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark p-3">
-        <div class="container-fluid"><span class="navbar-brand gold-text h1 italic">BODEGA PREMIUM</span></div>
+    <nav class="navbar navbar-dark p-3 sticky-top">
+        <div class="container-fluid"><span class="navbar-brand gold-text h1 italic">🍷 BODEGA PREMIUM</span></div>
     </nav>
 
     <div class="container-fluid">
         <div class="row">
             <!-- CATÁLOGO -->
             <div class="col-md-8 p-4">
-                <h2 class="gold-text mb-4">CATÁLOGO DE VINOS</h2>
+                <h2 class="gold-text mb-4 italic">NUESTRA SELECCIÓN</h2>
                 <div class="row row-cols-1 row-cols-md-3 g-4" id="catalogo">
-                    <!-- Aquí se cargarán tus productos -->
+                    <!-- Los productos se cargan aquí -->
                 </div>
             </div>
 
             <!-- CARRITO -->
             <div class="col-md-4 cart-panel">
-                <h3 class="gold-text">MI CARRITO</h3>
-                <div id="lista-carrito" class="my-4" style="border-bottom: 1px solid #333; min-height: 100px;"></div>
-                <h4 class="text-white">Total: <span class="gold-text" id="total">Bs 0.00</span></h4>
+                <h3 class="gold-text">🛒 MI CARRITO</h3>
+                <div id="lista-carrito" class="my-4" style="border-bottom: 1px solid #333; min-height: 150px;">
+                    <p class="text-muted italic">El carrito está vacío</p>
+                </div>
+                <h4 class="text-white mb-4">Total: <span class="gold-text" id="total">Bs 0.00</span></h4>
                 
                 <div class="mt-4">
-                    <label class="small gold-text">DIRECCIÓN DE ENVÍO:</label>
-                    <input type="text" id="direccion" class="form-control bg-dark text-white border-secondary mb-3">
-                    <button class="btn btn-gold w-100 p-3" onclick="finalizarPedido()">ENVIAR PEDIDO POR WHATSAPP</button>
+                    <label class="small gold-text fw-bold">DIRECCIÓN DE ENVÍO / REFERENCIAS:</label>
+                    <textarea id="direccion" class="form-control bg-dark text-white border-secondary mb-3" rows="3" placeholder="Ej: Calle Bolívar #123, frente a la plaza principal..."></textarea>
+                    <button class="btn btn-gold w-100 p-3 shadow" onclick="finalizarPedido()">ENVIAR PEDIDO POR WHATSAPP</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // LISTA DE TUS PRODUCTOS (Esto es lo que tus clientes verán)
+        // --- AQUÍ PUEDES EDITAR TUS PRODUCTOS FÁCILMENTE ---
         const productos = [
-            {id: 1, nombre: "VINO TINTO RESERVA", precio: 150, img: "imagenes/vino1.jpg"},
-            {id: 2, nombre: "CHARDONNAY PREMIUM", precio: 120, img: "imagenes/vino2.jpg"},
-            // Puedes añadir más aquí...
+            {id: 1, nombre: "VINO TINTO RESERVA", precio: 150.00, img: "imagenes/logo1.jpg"},
+            {id: 2, nombre: "CHARDONNAY PREMIUM", precio: 125.00, img: "imagenes/logo1.jpeg"},
+            {id: 3, nombre: "CABERNET SAUVIGNON", precio: 180.00, img: "imagenes/logo1.jpg"},
+            {id: 4, nombre: "OFERTA DEL MES", precio: 95.00, img: "imagenes/logo1.jpeg"}
         ];
 
         let carrito = [];
@@ -62,12 +66,12 @@
             productos.forEach(p => {
                 div.innerHTML += `
                     <div class="col">
-                        <div class="card card-product h-100">
-                            <img src="${p.img}" class="card-img-top p-3" style="height:200px; object-fit:contain;" onerror="this.src='https://via.placeholder.com/150?text=VINO'">
-                            <div class="card-body">
-                                <h5 class="card-title text-uppercase">${p.nombre}</h5>
-                                <p class="gold-text">Bs ${p.precio}</p>
-                                <button class="btn btn-dark border-secondary w-100" onclick="add('${p.nombre}', ${p.precio})">AÑADIR</button>
+                        <div class="card card-product">
+                            <img src="${p.img}" class="product-img" onerror="this.src='https://via.placeholder.com/150?text=VINOS'">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-uppercase gold-text">${p.nombre}</h5>
+                                <p class="h5 mb-3">Bs ${p.precio.toFixed(2)}</p>
+                                <button class="btn btn-gold mt-auto" onclick="add('${p.nombre}', ${p.precio})">AÑADIR AL CARRITO</button>
                             </div>
                         </div>
                     </div>`;
@@ -82,20 +86,31 @@
 
         function actualizarCarrito() {
             const lista = document.getElementById('lista-carrito');
-            lista.innerHTML = carrito.map(i => `<div class="d-flex justify-content-between small mb-1"><span>${i.nombre}</span><span>Bs ${i.precio}</span></div>`).join('');
+            if(carrito.length === 0) {
+                lista.innerHTML = '<p class="text-muted italic">El carrito está vacío</p>';
+            } else {
+                lista.innerHTML = carrito.map(i => `
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small">${i.nombre}</span>
+                        <span class="gold-text">Bs ${i.precio.toFixed(2)}</span>
+                    </div>`).join('');
+            }
             document.getElementById('total').innerText = `Bs ${total.toFixed(2)}`;
         }
 
         function finalizarPedido() {
-            const dir = document.getElementById('direccion').value;
-            if(!dir || carrito.length === 0) return alert("Añada productos y dirección");
+            const dir = document.getElementById('direccion').value.strip ? document.getElementById('direccion').value.trim() : document.getElementById('direccion').value;
+            if(carrito.length === 0) return alert("Por favor, añade productos al carrito");
+            if(!dir) return alert("Por favor, ingresa tu dirección para el envío");
             
-            // Crea el mensaje para WhatsApp
-            let mensaje = `*BODEGA PREMIUM - NUEVO PEDIDO*\n\n`;
-            carrito.forEach(i => mensaje += `- ${i.nombre}: Bs ${i.precio}\n`);
-            mensaje += `\n*TOTAL: Bs ${total.toFixed(2)}*\n*ENTREGA:* ${dir}`;
+            let mensaje = `*🍷 BODEGA PREMIUM - NUEVO PEDIDO*\n\n`;
+            mensaje += `*Detalle del pedido:*\n`;
+            carrito.forEach(i => mensaje += `• ${i.nombre} - Bs ${i.precio.toFixed(2)}\n`);
+            mensaje += `\n*TOTAL A PAGAR: Bs ${total.toFixed(2)}*`;
+            mensaje += `\n\n*Dirección de Envío:* ${dir}`;
+            mensaje += `\n\n_Pedido realizado desde la web_`;
             
-            // Envía a tu número 71390557
+            // Tu número 71390557 con código de Bolivia (591)
             const url = `https://wa.me/59171390557?text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
